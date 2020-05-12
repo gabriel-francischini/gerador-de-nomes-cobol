@@ -1,0 +1,197 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. LE-IMPRIME.
+       AUTHOR. HIROMASA.
+       INSTALLATION. FATEC-SP.
+       DATE-WRITTEN. 27/08/2004.
+       DATE-COMPILED.
+       SECURITY. APENAS O AUTOR PODE MODIFICA-LO.
+      *REMARKS. LE UM ARQUIVO E IMPRIME UM RELATORIO.
+
+       ENVIRONMENT DIVISION.
+
+       CONFIGURATION SECTION.
+       SOURCE-COMPUTER. IBM-PC.
+       OBJECT-COMPUTER. IBM-PC.
+       SPECIAL-NAMES. DECIMAL-POINT IS COMMA.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+           SELECT CAD-USU ASSIGN TO DISK
+               ORGANIZATION IS LINE SEQUENTIAL.
+           SELECT REL-ATR ASSIGN TO DISK.
+
+       DATA DIVISION.
+
+       FILE SECTION.
+
+       FD CAD-USU
+           LABEL RECORD ARE STANDARD
+           VALUE OF FILE-ID IS "CAD-USU.DAT".
+
+       01 REG-USU.
+       02 COD-USU
+       02 NOM-USU
+       02 DATA-USU.
+       03 DIA
+       03 MES
+       03 ANO
+       FD REL-ATR
+       LABEL RECORD
+       01 REG-ATR
+
+       STANDARD
+       "CAD-USU.DAT".
+
+       PIC 9(04).
+       PIC X(30).
+       PIC 9(02).
+       PIC 9(02).
+       PIC 9(04).
+       IS
+       OMITTED.
+       PIC X(80).
+
+
+       WORKING-STORAGE SECTION.
+       77 FIM-ARQ
+       77 CT-LIN
+       77 CT-PAG
+
+       PIC X(03) VALUE "NAO".
+       PIC 9(02) VALUE 25.
+       PIC 9(02) VALUE ZEROES.
+
+       01 CAB-01.
+       02 FILLER
+       02 FILLER
+       02 VAR-PAG
+       02 FILLER
+
+       PIC X(70) VALUE SPACES.
+       PIC X(05) VALUE "PAG. ".
+       PIC ZZ9.
+       PIC X(02) VALUE SPACES.
+
+       01 CAB-02.
+       02 FILLER
+       02 FILLER
+       02 FILLER
+       02 FILLER
+       01 CAB-03.
+       02 FILLER
+
+       PIC X(15) VALUE SPACES.
+       PIC X(25) VALUE
+       "RELATORIO DE USUARIOS DA".
+       PIC X(24) VALUE
+       " BIBLIOTECA BOM TEMPO ".
+       PIC X(16) VALUE SPACES.
+       PIC X(5) VALUE SPACES.
+
+       02 FILLER
+       02 FILLER
+       02 FILLER
+       02 FILLER
+       02 FILLER
+       02 FILLER
+       01 DETALHE.
+       02 FILLER
+       02 COD
+       02 FILLER
+       02 NOM
+       02 FILLER
+       02 DDD
+       02 FILLER
+       02 MMM
+       02 FILLER
+       02 AAA
+       02 FILLER
+
+       PIC X(6) VALUE "CODIGO".
+       PIC X(19) VALUE SPACES.
+       PIC X(4) VALUE "NOME".
+       PIC X(20) VALUE SPACES.
+       PIC X(21) VALUE
+       "DATA DE CADASTRAMENTO".
+       PIC X(5) VALUE SPACES.
+       PIC X(06) VALUE SPACES.
+       PIC 9999.
+       PIC X(06) VALUE SPACES.
+       PIC X(30).
+       PIC X(13) VALUE SPACES.
+       PIC 99.
+       PIC X(01) VALUE "/".
+       PIC 99.
+       PIC X(01) VALUE "/".
+       PIC 9999.
+       PIC X(11) VALUE SPACES.
+
+
+       PROCEDURE
+       DIVISION.
+       PGM-EX05.
+       PERFORM
+       INICIO.
+       PERFORM
+       PRINCIPAL
+       UNTIL FIM-ARQ EQUAL "SIM".
+       PERFORM
+       FIM.
+       STOP RUN.
+       INICIO.
+       OPEN
+       PERFORM
+
+       INPUT CAD-USU
+       OUTPUT REL-ATR.
+       LEITURA.
+
+       LEITURA.
+       READ CAD-USU
+       AT END
+       MOVE
+       "SIM" TO
+       PRINCIPAL.
+       PERFORM
+       PERFORM
+
+       FIM-ARQ.
+
+       IMPRESSAO.
+       LEITURA.
+
+       IMPRESSAO.
+       IF CT-LIN GREATER THAN
+       PERFORM CABECALHO.
+       PERFORM IMPDET.
+
+       24
+
+       IMPDET.
+       MOVE COD-USU TO COD.
+       MOVE NOM-USU TO NOM.
+       MOVE DIA
+       TO DDD.
+       MOVE MES
+       TO MMM.
+       MOVE ANO
+       TO AAA.
+       WRITE REG-ATR FROM DETALHE AFTER ADVANCING 1 LINE.
+       ADD
+       1
+       TO CT-LIN.
+       CABECALHO.
+       ADD
+       1
+       TO CT-PAG.
+       MOVE CT-PAG TO VAR-PAG.
+       WRITE REG-ATR AFTER ADVANCING PAGE.
+       WRITE REG-ATR FROM CAB-01 AFTER ADVANCING 1 LINE.
+       WRITE REG-ATR FROM CAB-02 AFTER ADVANCING 2 LINES.
+       WRITE REG-ATR FROM CAB-03 AFTER ADVANCING 2 LINES.
+       MOVE ZEROES TO CT-LIN.
+
+       FIM.
+       CLOSE
+
+       CAD-USU
+       REL-ATR.
